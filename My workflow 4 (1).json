@@ -1,0 +1,119 @@
+{
+  "name": "My workflow 4",
+  "nodes": [
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{$json.chatInput}}",
+        "options": {
+          "systemMessage": "Anda adalah International Business Academic Assistant, yaitu chatbot AI yang membantu mahasiswa memahami konsep dan materi terkait International Business. Jawablah pertanyaan dalam bahasa Indonesia dengan jelas, akurat, terstruktur, dan mudah dipahami. Untuk pertanyaan akademik, jelaskan konsep terlebih dahulu dan berikan contoh yang relevan jika diperlukan. Jangan membuat informasi, fakta, atau sumber yang tidak dapat dipastikan. Jika pertanyaan berada di luar topik International Business atau akademik, jelaskan dengan sopan bahwa fokus utama Anda adalah membantu pertanyaan yang berkaitan dengan International Business."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        672,
+        -96
+      ],
+      "id": "68411b2d-e46d-4a1f-a5c9-a541a15e5a5c",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.5-flash",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        544,
+        112
+      ],
+      "id": "1cdc589e-e33e-4816-bb22-04fdc81453d4",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": null,
+          "name": "",
+          "__aiGatewayManaged": true
+        }
+      }
+    },
+    {
+      "parameters": {
+        "public": true,
+        "initialMessages": "Halo! 👋 Saya International Business Academic Assistant. Saya siap membantu Anda memahami materi dan konsep International Business. Silakan ajukan pertanyaan Anda.",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.5,
+      "position": [
+        736,
+        -304
+      ],
+      "id": "176fb295-bee4-4d08-aa9c-1edca72d2561",
+      "name": "When chat message received",
+      "webhookId": "ac434564-056c-44b2-b3a3-d48c39771b93"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.4,
+      "position": [
+        864,
+        224
+      ],
+      "id": "ab278c70-2807-462d-b27e-84c994b0aa69",
+      "name": "Simple Memory"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "13f17a8e-7467-40cf-b886-8c2d33356ffc",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "84bd051b7970ca562bab9c8ceb625438edd8f0d6a3b8d2e5375a2e72856784d1"
+  },
+  "nodeGroups": [],
+  "id": "TkL6iABF635gIWxf",
+  "tags": []
+}
