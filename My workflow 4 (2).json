@@ -1,0 +1,165 @@
+{
+  "name": "My workflow 4",
+  "nodes": [
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{$json.chatInput}}",
+        "options": {
+          "systemMessage": "Anda adalah AI Chatbot yang membantu pengguna mencari informasi program pelatihan dan kursus.\n\nTugas Anda adalah menjawab pertanyaan pengguna mengenai:\n- Jenis atau nama program pelatihan/kursus\n- Deskripsi topik pelatihan/kursus\n- Biaya atau harga pelatihan/kursus\n\nGunakan tool Google Sheets \"Get row(s) in sheet in Google Sheets\" untuk mengambil data yang diperlukan.\n\nJika pengguna menanyakan harga atau informasi suatu pelatihan, WAJIB gunakan data dari Google Sheets.\nJangan membuat, memperkirakan, atau menggunakan informasi harga dari sumber lain.\n\nJawab berdasarkan data yang tersedia di Google Sheets secara singkat dan jelas.\nPENTING:\nUntuk setiap pertanyaan tentang nama program, jenis program, deskripsi, atau harga pelatihan/kursus, WAJIB gunakan tool \"Get row(s) in sheet in Google Sheets\" terlebih dahulu untuk mencari data di Google Sheets.\n\nJangan menjawab berdasarkan pengetahuan sendiri atau mengarang data.\nJika data ditemukan di Google Sheets, gunakan data tersebut sebagai sumber jawaban.\nJika data tidak ditemukan, katakan bahwa data tidak tersedia di database."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        672,
+        -96
+      ],
+      "id": "68411b2d-e46d-4a1f-a5c9-a541a15e5a5c",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.5-flash",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        544,
+        112
+      ],
+      "id": "1cdc589e-e33e-4816-bb22-04fdc81453d4",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": null,
+          "name": "",
+          "__aiGatewayManaged": true
+        }
+      }
+    },
+    {
+      "parameters": {
+        "public": true,
+        "initialMessages": "Halo! 👋 Saya International Business Academic Assistant. Saya siap membantu Anda memahami materi dan konsep International Business. Silakan ajukan pertanyaan Anda.",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.5,
+      "position": [
+        736,
+        -304
+      ],
+      "id": "176fb295-bee4-4d08-aa9c-1edca72d2561",
+      "name": "When chat message received",
+      "webhookId": "ac434564-056c-44b2-b3a3-d48c39771b93"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.4,
+      "position": [
+        704,
+        112
+      ],
+      "id": "ab278c70-2807-462d-b27e-84c994b0aa69",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Gunakan tool ini untuk mencari data program pelatihan dan kursus dari Google Sheets. \nSelalu gunakan tool ini ketika pengguna menanyakan nama pelatihan, jenis pelatihan, deskripsi, atau harga. \nGunakan data dari hasil pencarian Google Sheets sebagai dasar jawaban dan jangan mengarang informasi.",
+        "documentId": {
+          "__rl": true,
+          "value": "16TnFVllN7gNSnEmizIYfowTqJkORl5iDHLN9FQF_U4Y",
+          "mode": "list",
+          "cachedResultName": "Tabel Yudistira",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/16TnFVllN7gNSnEmizIYfowTqJkORl5iDHLN9FQF_U4Y/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/16TnFVllN7gNSnEmizIYfowTqJkORl5iDHLN9FQF_U4Y/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        864,
+        112
+      ],
+      "id": "867a8acc-283f-49cc-84c0-63d28215ed27",
+      "name": "Get row(s) in sheet in Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "InWSgPADDpWblCR2",
+          "name": "Google Sheets account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet in Google Sheets": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "ad480619-c75f-4acc-ba10-9972a0bdc563",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "84bd051b7970ca562bab9c8ceb625438edd8f0d6a3b8d2e5375a2e72856784d1"
+  },
+  "nodeGroups": [],
+  "id": "TkL6iABF635gIWxf",
+  "tags": []
+}
